@@ -1,0 +1,67 @@
+.my-recipes {
+    padding: 40px;
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+
+        p {
+            color: #777;
+        }
+    }
+
+    .home_recipe {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 25px;
+    }
+
+    .empty {
+        text-align: center;
+        font-size: 16px;
+        color: #666;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .card-wrapper {
+        position: relative;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+
+        button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+        }
+
+        .edit {
+            background: #4caf50;
+            margin-right: 8px;
+
+            &:hover {
+                background: #43a047;
+            }
+        }
+
+        .delete {
+            background: #e53935;
+
+            &:hover {
+                background: #c62828;
+            }
+        }
+    }
+}

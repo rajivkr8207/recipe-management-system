@@ -1,0 +1,21 @@
+.navicon {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-block: 1rem;
+
+    div {
+        display: flex;
+        gap: .6rem;
+
+        img {
+            width: 1rem;
+        }
+
+        span:nth-child(2) {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+    }
+}

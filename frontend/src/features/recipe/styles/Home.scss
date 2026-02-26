@@ -1,0 +1,44 @@
+.home {
+  padding: 40px;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    h1 {
+      font-size: 36px;
+    }
+
+    p {
+      color: #777;
+      margin: 10px 0 20px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      input,
+      select {
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        min-width: 180px;
+
+        &:focus {
+          border-color: #4caf50;
+          outline: none;
+        }
+      }
+    }
+
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+  }
+}
