@@ -4,17 +4,18 @@ const FavouriteModel = require("../models/favourite.model")
 
 const createFavourite = async (req, res) => {
     const recipeid = req.params.id
-    const alreadyfav = await FavouriteModel.find({
-        author: req.user.id,
-        recipe: recipeid,
-        isfavourite: true
-    })
-    if (alreadyfav) {
-        return res.status(409).json({
-            message: "this recipe is already favourite"
-        })
-    }
-    await FavouriteModel.create({
+    console.log(recipeid);
+    // const alreadyfav = await FavouriteModel.find({
+    //     author: req.user.id,
+    //     recipe: recipeid,
+    //     isfavourite: true
+    // })
+    // if (alreadyfav) {
+    //     return res.status(409).json({
+    //         message: "this recipe is already favourite"
+    //     })
+    // }
+    const fav = await FavouriteModel.create({
         author: req.user.id,
         recipe: recipeid,
         isfavourite: true
@@ -22,6 +23,7 @@ const createFavourite = async (req, res) => {
 
     return res.status(201).json({
         message: "favourite recipe add successfully",
+        fav
     })
 }
 const FetchMyFavRecipe = async (req, res) => {

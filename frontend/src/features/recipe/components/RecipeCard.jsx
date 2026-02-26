@@ -1,9 +1,17 @@
 import { useNavigate } from "react-router";
 import "../styles/RecipeCard.scss";
 import { FiEdit, FiTrash } from "react-icons/fi";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { createFavorite } from "../services/recipe.api";
 const RecipeCard = ({ recipe, User, handleDeleteRecipe }) => {
   const [ismyrecipe, setismyrecipe] = useState(false)
+  const [isFavourite, setIsFavourite] = useState()
+
+  useEffect(() => {
+    setIsFavourite(recipe.isFavourite)
+  }, [recipe])
+
   const navigate = useNavigate()
   function findisMyrecipe() {
     if (recipe?.author._id == User?._id) {
@@ -15,6 +23,20 @@ const RecipeCard = ({ recipe, User, handleDeleteRecipe }) => {
     findisMyrecipe()
   }, [User])
 
+
+
+  const handleFavorite = async () => {
+    console.log('click on fav');
+    const res = await createFavorite(recipe._id)
+    console.log(res);
+
+    // try {
+    // } catch (error) {
+    //   console.error(error);
+    // }
+  }
+
+
   return (
     <div className="recipe-card" >
       {ismyrecipe && <>
@@ -23,6 +45,13 @@ const RecipeCard = ({ recipe, User, handleDeleteRecipe }) => {
           <button className="delete" onClick={() => handleDeleteRecipe(recipe._id)}><FiTrash /></button>
         </div>
       </>}
+      {/* fav_heart */}
+      <div onClick={() => handleFavorite()} className={`recipe_fav_heart ${isFavourite && 'fav_heart'} `}>
+        {isFavourite ?
+          <FaHeart /> :
+          <FaRegHeart />
+        }
+      </div>
       {/* Image */}
       <div className="recipe-card__image" onClick={() => navigate(`/recipe/${recipe._id}`)}>
         <img src={recipe.image} alt={recipe.title} />

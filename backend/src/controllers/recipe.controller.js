@@ -1,3 +1,4 @@
+const FavouriteModel = require("../models/favourite.model");
 const RecipieModel = require("../models/recipes.model");
 
 
@@ -48,24 +49,90 @@ const CreateRecipe = async (req, res) => {
 
 const getMyAllRecipes = async (req, res) => {
     try {
+        const userId = req.user.id;
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const skip = (page - 1) * limit;
+
+        const totalRecipes = await RecipieModel.countDocuments({ author: userId });
+
         const recipes = await RecipieModel
-            .find({ author: req.user.id })
+            .find({ author: userId })
             .populate("author", "username email")
-            .sort({ createdAt: -1 });
-        return res.status(200).json(recipes);
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean();
+
+        const favourites = await FavouriteModel
+            .find({ author: userId })
+            .select("recipe");
+
+        const favouriteIds = new Set(
+            favourites.map(fav => fav.recipe.toString())
+        );
+
+        const updatedRecipes = recipes.map(recipe => ({
+            ...recipe,
+            isFavourite: favouriteIds.has(recipe._id.toString())
+        }));
+
+        return res.status(200).json({
+            message: "fetch all my recipe",
+            pagination: {
+                total: totalRecipes,
+                page,
+                limit,
+                totalPages: Math.ceil(totalRecipes / limit)
+            },
+            data: updatedRecipes
+        });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+};
 
 const getAllRecipes = async (req, res) => {
     try {
+        const userId = req.user.id;
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const skip = (page - 1) * limit;
+        const totalRecipes = await RecipieModel.countDocuments({ isPublished: true });
         const recipes = await RecipieModel
             .find({ isPublished: true })
             .populate("author", "username email")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean();
+        const favourites = await FavouriteModel
+            .find({ author: userId })
+            .select("recipe");
 
-        return res.status(200).json(recipes);
+        const favouriteIds = new Set(
+            favourites.map(fav => fav.recipe.toString())
+        );
+
+        const updatedRecipes = recipes.map(recipe => ({
+            ...recipe,
+            isFavourite: favouriteIds.has(recipe._id.toString())
+        }));
+        return res.status(200).json({
+            message: "fetch all recipe",
+            pagination: {
+                total: totalRecipes,
+                page,
+                limit,
+                totalPages: Math.ceil(totalRecipes / limit)
+            },
+            data: updatedRecipes
+        });
 
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -139,36 +206,36 @@ const deleteRecipe = async (req, res) => {
 };
 // GET /api/recipes?search=...&difficulty=...&category=...
 const searchRecipes = async (req, res) => {
-  try {
-    const { search, difficulty, category } = req.query;
+    try {
+        const { search, difficulty, category } = req.query;
 
-    let query = { isPublished: true };
+        let query = { isPublished: true };
 
-    if (search) {
-      query.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { category: { $regex: search, $options: "i" } },
-        { tags: { $regex: search, $options: "i" } }
-      ];
+        if (search) {
+            query.$or = [
+                { title: { $regex: search, $options: "i" } },
+                { category: { $regex: search, $options: "i" } },
+                { tags: { $regex: search, $options: "i" } }
+            ];
+        }
+
+        if (difficulty) {
+            query.difficulty = difficulty;
+        }
+
+        if (category) {
+            query.category = category;
+        }
+
+        const recipes = await RecipieModel.find(query).populate("author", "fullname");
+
+        return res.status(200).json({
+            count: recipes.length,
+            recipes,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-
-    if (difficulty) {
-      query.difficulty = difficulty;
-    }
-
-    if (category) {
-      query.category = category;
-    }
-
-    const recipes = await RecipieModel.find(query).populate("author", "fullname");
-
-    return res.status(200).json({
-      count: recipes.length,
-      recipes,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 module.exports = {
     CreateRecipe,

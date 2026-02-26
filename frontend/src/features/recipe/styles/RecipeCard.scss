@@ -9,6 +9,17 @@
   position: relative;
   overflow: hidden;
 
+  .recipe_fav_heart {
+    position: absolute;
+    top: 40%;
+    right: .6rem;
+    // background-color: red;
+    z-index: 50;
+    font-size: 1.5rem;
+  }
+.fav_heart{
+  color: red;
+}
   .recipe_edit-delete {
     position: absolute;
     top: 1%;
@@ -18,10 +29,11 @@
     z-index: 10;
     font-size: .7rem;
 
-    .edit{
+    .edit {
       background-color: rgb(92, 188, 95);
     }
-    .delete{
+
+    .delete {
       background-color: #e53935;
     }
   }

@@ -5,13 +5,13 @@ const bcrypt = require('bcrypt');
 const RegisterController = async (req, res) => {
     const { fullname, username, email, password } = req.body
     console.log(fullname, username, email, password);
-    // const isUseralreadyexist = await Usermodel.findOne({ username })
+    const isUseralreadyexist = await Usermodel.findOne({ username })
 
-    // if (isUseralreadyexist) {
-    //     return res.status(409).json({
-    //         message: 'user is already exist'
-    //     })
-    // }
+    if (isUseralreadyexist) {
+        return res.status(409).json({
+            message: 'user is already exist'
+        })
+    }
     const hashPassword = await bcrypt.hash(password, 10)
 
 

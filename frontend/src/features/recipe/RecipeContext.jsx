@@ -9,7 +9,7 @@ const RecipeProvider = ({ children }) => {
   async function fetchMyRecipe() {
     try {
       const res = await api.get("/recipe");
-      setMyRecipe(res.data)
+      setMyRecipe(res.data.data)
     } catch (error) {
       console.error(error);
     }
@@ -18,7 +18,7 @@ const RecipeProvider = ({ children }) => {
   async function fetchRecipe() {
     try {
       const res = await api.get("/recipe/all");
-      setRecipe(res.data);
+      setRecipe(res.data.data);
     } catch (error) {
       console.error(error);
     }
