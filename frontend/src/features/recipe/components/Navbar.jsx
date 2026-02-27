@@ -1,10 +1,12 @@
 import { NavLink, useNavigate } from "react-router";
+import { useState } from "react";
 import "../styles/Navbar.scss";
 import useAuth from "../../auth/hooks/useAuth";
 
 function Navbar() {
   const { User, setUser, handleLogout } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const onLogout = async () => {
     await handleLogout();
@@ -14,32 +16,40 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      {/* Logo */}
       <div className="navbar__logo">
-        <NavLink to="/">MyRecipeApp</NavLink>
+        <NavLink to="/">Online Recipe</NavLink>
       </div>
 
-      {/* Center Links */}
-      <ul className="navbar__links">
+      {/* Hamburger */}
+      <div 
+        className={`navbar__toggle ${menuOpen ? "active" : ""}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      {/* Links */}
+      <ul className={`navbar__links ${menuOpen ? "open" : ""}`}>
         <li>
-          <NavLink to="/">Home</NavLink>
+          <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
         </li>
         <li>
-          <NavLink to="/recipe/create">Posts</NavLink>
+          <NavLink to="/recipe/create" onClick={() => setMenuOpen(false)}>Posts</NavLink>
         </li>
         <li>
-          <NavLink to="/myrecipe">myRecipes</NavLink>
+          <NavLink to="/myrecipe" onClick={() => setMenuOpen(false)}>MyRecipes</NavLink>
+        </li>
+        <li>
+          <NavLink to="/profile" onClick={() => setMenuOpen(false)}>
+            {User?.username || "Profile"}
+          </NavLink>
+        </li>
+        <li>
+          <button onClick={onLogout}>Logout</button>
         </li>
       </ul>
-
-      {/* Right Side */}
-      <div className="navbar__right">
-        <NavLink to="/profile" className="profile">
-          {User?.username || "Profile"}
-        </NavLink>
-
-        <button onClick={() => onLogout()}>Logout</button>
-      </div>
     </nav>
   );
 }

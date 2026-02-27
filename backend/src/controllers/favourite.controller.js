@@ -4,17 +4,16 @@ const FavouriteModel = require("../models/favourite.model")
 
 const createFavourite = async (req, res) => {
     const recipeid = req.params.id
-    console.log(recipeid);
-    // const alreadyfav = await FavouriteModel.find({
-    //     author: req.user.id,
-    //     recipe: recipeid,
-    //     isfavourite: true
-    // })
-    // if (alreadyfav) {
-    //     return res.status(409).json({
-    //         message: "this recipe is already favourite"
-    //     })
-    // }
+    const alreadyfav = await FavouriteModel.findOne({
+        author: req.user.id,
+        recipe: recipeid,
+        isfavourite: true
+    })
+    if (alreadyfav) {
+        return res.status(409).json({
+            message: "this recipe is already favourite"
+        })
+    }
     const fav = await FavouriteModel.create({
         author: req.user.id,
         recipe: recipeid,
@@ -47,7 +46,7 @@ const DeletedFavourite = async (req, res) => {
             message: "recipe is not exist"
         })
     }
-    await FavouriteModel.findByIdAndDelete(alreadyfav._id)
+    await FavouriteModel.deleteOne(alreadyfav._id)
     return res.status(204).json({
         message: "favourite recipe deleted successfully",
     })

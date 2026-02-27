@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser')
 const authRouter = require("./routes/auth.route")
 const RecipeRouter = require("./routes/recipe.route")
 const cors = require('cors')
-const FavouriteModel = require("./models/favourite.model")
+const FavouriteRouter = require("./routes/favourite.route")
 const app = express()
 
 app.use(morgan('dev'))
@@ -17,7 +17,7 @@ app.use(cookieParser())
 
 app.use('/api/auth', authRouter)
 app.use('/api/recipe', RecipeRouter)
-app.use('/api/favourite', FavouriteModel)
+app.use('/api/favourite', FavouriteRouter)
 
 
 module.exports = app

@@ -27,10 +27,22 @@
   flex-direction: column;
 }
 
-.recipe-header h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
-  text-transform: capitalize;
+.recipe-header {
+  position: relative;
+  h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+  }
+  .recipe_fav_heart{
+    position: absolute;
+    top: 7%;
+    right: 5%;
+    font-size: 1.5rem;
+  }
+  .fav_heart{
+    color: red;
+  }
 }
 
 .meta-info {
@@ -42,7 +54,7 @@
   color: #666;
 
 
-  span:nth-child(4){
+  span:nth-child(4) {
     text-transform: capitalize;
   }
 }

@@ -3,6 +3,7 @@ import "../styles/RecipeDetails.scss";
 import { useParams } from "react-router";
 import { fetchRecipeById } from "../services/recipe.api";
 import { useEffect } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const RecipeDetails = () => {
     const {id} = useParams()
@@ -30,7 +31,12 @@ const RecipeDetails = () => {
       <div className="recipe-content">
         <div className="recipe-header">
           <h1>{recipe.title}</h1>
-
+    <div className={`recipe_fav_heart ${recipe.isFavourite && 'fav_heart'} `}>
+            {recipe?.isFavourite ?
+              <FaHeart /> :
+              <FaRegHeart />
+            }
+          </div>
           <div className="meta-info">
             <span className={`difficulty ${recipe.difficulty}`}>
               {recipe.difficulty}

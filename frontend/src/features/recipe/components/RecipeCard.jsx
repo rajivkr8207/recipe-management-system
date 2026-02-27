@@ -3,7 +3,7 @@ import "../styles/RecipeCard.scss";
 import { FiEdit, FiTrash } from "react-icons/fi";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { createFavorite } from "../services/recipe.api";
+import { createFavorite, deleteFavorite } from "../services/recipe.api";
 const RecipeCard = ({ recipe, User, handleDeleteRecipe }) => {
   const [ismyrecipe, setismyrecipe] = useState(false)
   const [isFavourite, setIsFavourite] = useState()
@@ -26,14 +26,17 @@ const RecipeCard = ({ recipe, User, handleDeleteRecipe }) => {
 
 
   const handleFavorite = async () => {
-    console.log('click on fav');
-    const res = await createFavorite(recipe._id)
-    console.log(res);
-
-    // try {
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    try {
+      if (isFavourite) {
+        await deleteFavorite(recipe._id)
+        setIsFavourite(false)
+      } else {
+        await createFavorite(recipe._id)
+        setIsFavourite(true)
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 

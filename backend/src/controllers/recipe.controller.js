@@ -143,13 +143,22 @@ const getRecipeById = async (req, res) => {
     try {
         const recipe = await RecipieModel
             .findById(req.params.id)
-            .populate("author", "username fullname");
-
+            .populate("author", "username fullname")
+            .lean();
         if (!recipe) {
             return res.status(404).json({ message: "Recipe not found" });
         }
+        const alreadyfav = await FavouriteModel.findOne({
+            author: req.user.id,
+            recipe: recipe._id,
+            isfavourite: true
+        }).lean()
+        const updatedRecipes = {
+            ...recipe,
+            isFavourite: !!alreadyfav
+        };
 
-        res.status(200).json(recipe);
+        res.status(200).json(updatedRecipes);
 
     } catch (error) {
         res.status(500).json({ message: error.message });
